@@ -1,0 +1,25 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+
+# 忽略IntelliJ IDEA的输出目录
+out/
+
+# 通常还会忽略IDEA相关的全局配置文件夹及其它生成文件
+.idea/*
+!.idea/.gitignore
+!*.iml # 如果需要将某些通用的iml文件提交到版本库，取消这一行的注释符号并保留该行
+
+# 对于Maven和Gradle项目，可能还会有额外的忽略规则
+target/
+build/
+
+# 下面是针对整个项目的通用IDEA相关文件/目录
+*.iml # 若不想提交任何iml文件，取消注释此行
+*.ipr
+*.iws
