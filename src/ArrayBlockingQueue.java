@@ -36,7 +36,7 @@ public class ArrayBlockingQueue<E> {
     public void put(E e) throws InterruptedException {
         while (count == items.length) {
             System.out.println("生产者线程阻塞一下");
-            wait.waitFor();
+//            wait.waitFor();
         }
         System.out.println("生产者线程继续运行");
         // 在这里线程可能阻塞结束或者没有阻塞，需要重置retries的属性
@@ -53,7 +53,7 @@ public class ArrayBlockingQueue<E> {
     public E take() throws InterruptedException {
         while (count == 0) {
             System.out.println("消费者线程阻塞一下");
-            wait.waitFor();
+//            wait.waitFor();
         }
         System.out.println("消费者线程继续运行");
         wait.setRetries(200);

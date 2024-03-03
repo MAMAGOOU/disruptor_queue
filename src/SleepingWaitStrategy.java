@@ -46,21 +46,36 @@ public final class SleepingWaitStrategy implements WaitStrategy {
     }
 
     /**
-     * 让线程等待
+     * 阻塞策略
+     *
+     * @param a 生产者进度
+     * @param b 消费者进度
      */
     @Override
-    public void waitFor() {
-        if (retries > 100) {
-            retries--;
+    public void waitFor(Sequence a, long b) {
+        int counter = retries;
+        while (a.get() < b) {
+            counter = applyWaitMethod(counter);
         }
-        // 如果自旋次数<100，说明已经自旋很多次了，尝试让该线程退出cpu
-        else if (retries > 0) {
-            retries--;
+    }
+
+
+    private int applyWaitMethod(int counter) {
+        if (counter > 100) {
+            --counter;
+        }
+        //如果自旋次数小于100，大于0了，说明已经自旋了很多次了，但还是不能继续向下工作，这时候尝试让该线程让出CPU
+        else if (counter > 0) {
+            --counter;
             Thread.yield();
         } else {
-            // 自选次数达到了200就干脆让线程睡一下
-            // 但是不能够太久，因为生产者随时可能发布新的数据
+            //走到这里意味着自旋次数到达200了，这时候就干脆让线程睡一会吧
+            //睡的时间就是100纳秒，不能睡得太久，因为生产者可能随时发布新的数据
             LockSupport.parkNanos(sleepTimeNS);
         }
+
+        //这里返回剩余的自旋次数，方便下一次循环的时候继续使用
+        //这样，再多消费者情况下，只要外面的循环不结束，那么每个线程使用的都是自己剩余的自旋数
+        return counter;
     }
 }
